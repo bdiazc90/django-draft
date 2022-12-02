@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task: {{ object.id }}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+</head>
+<body>
+    <div class="container-sm mt-5">
+        <a href="/" class="btn btn-primary">Regresar</a>
+        <div id="task_section">
+            <h1 class="display-4 mt-3">
+                <input id="taskId" type="hidden" value="{{ object.id }}" />
+                <span id="taskText">{{ object.name }}</span>
+            </h1>
+            <a class="btn btn-secondary" href="javascript: edit(this);">editar</a>
+        </div>
+        <input type="hidden" id="token" value="{{ csrf_token }}">
+        <hr>
+        <p>
+            {% if object.created_at %}
+            Creado en: {{ object.created_at | date:"d,M H:i:s" }}
+            {% endif %}
+        </p>
+        {% if object.done_at %}
+        <p>
+            Completado en: {{ object.done_at }}
+        </p>
+        {% else %}
+            {% if object.deleted_at %}
+            <form action="/done" method="post">
+                <input type="hidden" name="id" value="{{ object.id }}">
+                <button type="submit" class="btn btn-success">Completado</button>
+            </form>
+            {% endif %}
+        {% endif %}
+
+        {% if object.deleted_at %}
+        <p>
+            Eliminado en: {{ object.deleted_at }}
+        </p>
+        {% else %}
+        <a class="btn btn-danger" href="">Eliminar</a>
+        {% endif %}
+    </div>
+</body>
+{% load static %}
+<script src="{% static 'app.js' %}"></script>
+</html>
